@@ -1,4 +1,4 @@
-# by40Q Workspace
+# 40Q Plugin Workspace Hub
 
 Development workspace for 40Q Agency WordPress plugins. **This repo is for development only** — it is never deployed to production.
 
