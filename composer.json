@@ -1,11 +1,9 @@
 {
   "name": "by40q/workspace",
   "version": "1.0.0",
-  "private": true,
   "description": "40Q Agency – WordPress Plugin Workspace",
   "workspaces": [
-    "plugins/by40q-core",
-    "plugins/by40q-plugin-boilerplate"
+    "plugins/by40q-core"
   ],
   "scripts": {
     "env:start": "wp-env start",
@@ -25,8 +23,5 @@
   "engines": {
     "node": ">=20.0.0",
     "npm": ">=10.0.0"
-  },
-  "require-dev": {
-    "php-stubs/wordpress-stubs": "^6.9"
   }
 }

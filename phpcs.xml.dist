@@ -16,20 +16,10 @@
 	<config name="testVersion" value="8.2-"/>
 
 	<!-- Minimum WP version — suppresses false-positives for functions
-	     available since the versions we support. WordPress core does NOT
-	     need to be present on disk; PHPCS uses its own bundled stubs. -->
+	available since the versions we support. WordPress core does NOT
+	need to be present on disk; PHPCS uses its own bundled stubs. -->
 	<config name="minimum_supported_wp_version" value="6.4"/>
-
-	<!-- Text domain for i18n checks -->
-	<rule ref="WordPress.WP.I18n">
-		<properties>
-			<property name="text_domain" type="array">
-				<element value="by40q"/>
-			</property>
-		</properties>
-	</rule>
 
 	<!-- Allow short array syntax -->
 	<rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-
 </ruleset>
