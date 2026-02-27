@@ -1,27 +1,28 @@
 {
-  "name": "by40q/workspace",
-  "version": "1.0.0",
-  "description": "40Q Agency – WordPress Plugin Workspace",
-  "workspaces": [
-    "plugins/by40q-core"
-  ],
-  "scripts": {
-    "env:start": "wp-env start",
-    "env:stop": "wp-env stop",
-    "env:restart": "wp-env start --update",
-    "env:reset": "wp-env clean all",
-    "env:destroy": "wp-env destroy",
-    "env:logs": "wp-env logs",
-    "build": "npm run build --workspaces --if-present",
-    "build:watch": "npm run start --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present",
-    "lint:fix": "npm run lint:fix --workspaces --if-present"
+  "name": "by40q/plugin-hub",
+  "description": "40Q Agency – WordPress Plugin Development Hub",
+  "type": "project",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": ">=8.2",
+    "composer/installers": "^2.0"
   },
-  "devDependencies": {
-    "@wordpress/env": "^10.0.0"
+  "require-dev": {
+    "wp-coding-standards/wpcs": "^3.0",
+    "phpcsstandards/phpcsextra": "^1.2"
   },
-  "engines": {
-    "node": ">=20.0.0",
-    "npm": ">=10.0.0"
+  "repositories": {
+    "by40q-core": {
+      "type": "path",
+      "url": "./plugins/by40q-core",
+      "options": {
+        "symlink": true
+      }
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    }
   }
 }

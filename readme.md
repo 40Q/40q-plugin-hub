@@ -5,7 +5,7 @@ Development workspace for 40Q Agency WordPress plugins. **This repo is for devel
 ## Requirements
 
 - Node.js >= 20
-- npm >= 10
+- yarn >= 4
 - Composer >= 2
 - Docker Desktop
 
@@ -13,8 +13,8 @@ Development workspace for 40Q Agency WordPress plugins. **This repo is for devel
 
 ```bash
 # 1. Clone with submodules
-git clone --recurse-submodules https://github.com/40q/by40q-workspace.git
-cd by40q-workspace
+git clone --recurse-submodules https://github.com/40q/40q-plugin-hub.git
+cd 40q-plugin-hub
 
 # 2. Install all JS dependencies (all plugins via workspaces)
 yarn install
