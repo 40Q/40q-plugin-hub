@@ -25,5 +25,9 @@
       "composer/installers": true,
       "dealerdirect/phpcodesniffer-composer-installer": true
     }
+  },
+  "scripts": {
+    "lint": "./vendor/bin/phpcs",
+    "lint:fix": "./vendor/bin/phpcbf"
   }
 }
