@@ -13,10 +13,8 @@
     "env:reset": "wp-env clean all",
     "env:destroy": "wp-env destroy",
     "env:logs": "wp-env logs",
-    "build": "yarn workspaces run build",
-    "build:watch": "yarn workspaces run start",
-    "lint": "yarn workspaces run lint",
-    "lint:fix": "yarn workspaces run lint:fix"
+    "lint": "composer run lint",
+    "lint:fix": "composer run lint:fix"
   },
   "devDependencies": {
     "@wordpress/env": "^10.0.0"
