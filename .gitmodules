@@ -1,3 +1,3 @@
 [submodule "plugins/by40q-core"]
 	path = plugins/by40q-core
-	url = git@github.com:40Q/by40-core.git
+	url = git@github.com:40Q/by40q-core.git
