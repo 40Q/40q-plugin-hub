@@ -1,6 +1,5 @@
 vendor/
 node_modules/
-build/
 uploads/
 
 # Numerous always-ignore extensions
