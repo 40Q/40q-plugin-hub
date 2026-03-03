@@ -37,6 +37,15 @@ class Rest_Controller {
 					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_settings' ),
 					'permission_callback' => array( $this, 'check_permission' ),
+					'args'                => array(
+						'page' => array(
+							'required'          => false,
+							'type'              => 'string',
+							'default'           => 'main',
+							'sanitize_callback' => 'sanitize_key',
+							'description'       => 'Page context key — which submenu page to return schema for.',
+						),
+					),
 				),
 				array(
 					'methods'             => \WP_REST_Server::CREATABLE,
@@ -45,7 +54,6 @@ class Rest_Controller {
 					'args'                => array(
 						'values' => array(
 							'required'    => true,
-							'type'        => 'object',
 							'description' => 'Flat key→value map of all field values to save.',
 						),
 					),
@@ -55,14 +63,32 @@ class Rest_Controller {
 	}
 
 	/**
-	 * GET handler — returns the full schema with current values.
+	 * GET handler — returns the schema for the requested page with current values.
 	 *
+	 * @param \WP_REST_Request $request Incoming request.
 	 * @return \WP_REST_Response
 	 */
-	public function get_settings(): \WP_REST_Response {
+	public function get_settings( \WP_REST_Request $request ): \WP_REST_Response {
+		$page              = sanitize_key( $request->get_param( 'page' ) ?? 'main' );
+		$stored_shortcodes = Field_Registry::get_shortcode_settings();
+		$shortcodes        = array();
+		foreach ( Field_Registry::get_fields() as $key => $field ) {
+			if ( ! in_array( $field['type'], array( 'text', 'textarea', 'richtext', 'url' ), true ) ) {
+				continue;
+			}
+			// Skip fields that have shortcodes disabled.
+			if ( $field['disable_shortcode'] ?? false ) {
+				continue;
+			}
+			$shortcodes[ $key ] = array(
+				'enabled' => (bool) ( $stored_shortcodes[ $key ]['enabled'] ?? false ),
+				'slug'    => (string) ( $stored_shortcodes[ $key ]['slug'] ?? '' ),
+			);
+		}
 		return rest_ensure_response(
 			array(
-				'schema' => Field_Registry::get_schema(),
+				'schema'     => Field_Registry::get_schema( $page ),
+				'shortcodes' => $shortcodes,
 			)
 		);
 	}
@@ -85,6 +111,11 @@ class Rest_Controller {
 		}
 
 		$saved = Field_Registry::save_values( $values );
+
+		$shortcodes = $request->get_param( 'shortcodes' );
+		if ( is_array( $shortcodes ) ) {
+			Field_Registry::save_shortcode_settings( $shortcodes );
+		}
 
 		return rest_ensure_response(
 			array(

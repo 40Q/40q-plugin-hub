@@ -13,6 +13,7 @@ import type {
 	GetSettingsResponse,
 	SaveSettingsResponse,
 	SettingsSchema,
+	ShortcodeSettings,
 } from '../types';
 import SettingsTabs from './SettingsTabs';
 
@@ -22,11 +23,13 @@ export default function SettingsPage() {
 	const [ schema, setSchema ]   = useState< SettingsSchema >( [] );
 	const [ values, setValues ]   = useState< FieldValues >( {} );
 	const [ loading, setLoading ] = useState< boolean >( true );
-	const [ status, setStatus ]   = useState< SaveStatus >( 'idle' );
+	const [ status, setStatus ]         = useState< SaveStatus >( 'idle' );
+	const [ shortcodes, setShortcodes ] = useState< ShortcodeSettings >( {} );
 
 	// Fetch schema + current values on mount.
 	useEffect( () => {
-		apiFetch< GetSettingsResponse >( { path: '/by40q/v1/global-settings' } )
+		const page = window.by40qGlobalSettings?.page ?? 'main';
+		apiFetch< GetSettingsResponse >( { path: `/by40q/v1/global-settings?page=${ page }` } )
 			.then( ( response ) => {
 				setSchema( response.schema );
 
@@ -38,6 +41,7 @@ export default function SettingsPage() {
 					} );
 				} );
 				setValues( initialValues );
+				setShortcodes( response.shortcodes ?? {} );
 				setLoading( false );
 			} )
 			.catch( () => {
@@ -57,6 +61,10 @@ export default function SettingsPage() {
 		}
 	};
 
+	const handleShortcodeChange = ( key: string, enabled: boolean, slug: string ) => {
+		setShortcodes( ( prev ) => ( { ...prev, [ key ]: { enabled, slug } } ) );
+	};
+
 	/**
 	 * POST current values to the REST API.
 	 */
@@ -66,7 +74,7 @@ export default function SettingsPage() {
 			await apiFetch< SaveSettingsResponse >( {
 				path:   '/by40q/v1/global-settings',
 				method: 'POST',
-				data:   { values },
+				data:   { values, shortcodes },
 			} );
 			setStatus( 'saved' );
 		} catch {
@@ -129,7 +137,9 @@ export default function SettingsPage() {
 					{
 						schema,
 						values,
-						onChange: handleChange,
+						onChange:          handleChange,
+						shortcodeSettings: shortcodes,
+						onShortcodeChange: handleShortcodeChange,
 					}
 				)
 		)

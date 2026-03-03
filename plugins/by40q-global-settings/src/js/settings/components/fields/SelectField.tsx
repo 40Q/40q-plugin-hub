@@ -23,5 +23,6 @@ export default function SelectField( { field, value, onChange }: Props ) {
 		options,
 		onChange: ( next: string ) => onChange( next ),
 		__nextHasNoMarginBottom: true,
+		__next40pxDefaultSize: true,
 	} );
 }

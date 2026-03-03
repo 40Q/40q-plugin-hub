@@ -107,5 +107,44 @@ add_action(
 				],
 			]
 		);
+
+		// Input type hints.
+		Field_Registry::register_field(
+			[
+				'key'         => 'sample_email',
+				'label'       => 'Email (input_type: email)',
+				'type'        => 'text',
+				'input_type'  => 'email',
+				'tab'         => 'sample',
+				'default'     => '',
+				'description' => 'Text field with input_type "email" — triggers browser email validation and mobile keyboard.',
+			]
+		);
+
+		Field_Registry::register_field(
+			[
+				'key'         => 'sample_tel',
+				'label'       => 'Phone (input_type: tel)',
+				'type'        => 'text',
+				'input_type'  => 'tel',
+				'tab'         => 'sample',
+				'default'     => '',
+				'description' => 'Text field with input_type "tel" and a custom shortcode slug "sample_phone".',
+			]
+		);
+
+		// Repeater field.
+		Field_Registry::register_field(
+			[
+				'key'           => 'sample_links',
+				'label'         => 'Links',
+				'type'          => 'repeater',
+				'repeater_type' => 'url',
+				'sub_label'     => 'URL',
+				'tab'           => 'sample',
+				'default'       => [],
+				'description'   => 'Repeater of URL sub-fields.',
+			]
+		);
 	}
 );

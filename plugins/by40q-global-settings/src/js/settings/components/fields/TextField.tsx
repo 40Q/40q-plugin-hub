@@ -13,6 +13,8 @@ export default function TextField( { field, value, onChange }: Props ) {
 		label:    field.label,
 		value:    ( value as string ) ?? '',
 		onChange: ( next: string ) => onChange( next ),
+		type:     field.inputType || undefined,
 		__nextHasNoMarginBottom: true,
+		__next40pxDefaultSize: true,
 	} );
 }

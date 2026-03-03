@@ -16,5 +16,6 @@ export default function UrlField( { field, value, onChange }: Props ) {
 		onChange: ( next: string ) => onChange( next ),
 		placeholder: 'https://',
 		__nextHasNoMarginBottom: true,
+		__next40pxDefaultSize: true,
 	} );
 }

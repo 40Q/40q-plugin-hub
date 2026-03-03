@@ -7,16 +7,18 @@
 
 import { createElement } from '@wordpress/element';
 import { TabPanel } from '@wordpress/components';
-import type { FieldValues, SettingsSchema } from '../types';
+import type { FieldValues, SettingsSchema, ShortcodeSettings } from '../types';
 import FieldRenderer from './fields/FieldRenderer';
 
 interface SettingsTabsProps {
-	schema:   SettingsSchema;
-	values:   FieldValues;
-	onChange: ( key: string, value: FieldValues[ string ] ) => void;
+	schema:            SettingsSchema;
+	values:            FieldValues;
+	onChange:          ( key: string, value: FieldValues[ string ] ) => void;
+	shortcodeSettings: ShortcodeSettings;
+	onShortcodeChange: ( key: string, enabled: boolean, slug: string ) => void;
 }
 
-export default function SettingsTabs( { schema, values, onChange }: SettingsTabsProps ) {
+export default function SettingsTabs( { schema, values, onChange, shortcodeSettings, onShortcodeChange }: SettingsTabsProps ) {
 	if ( schema.length === 0 ) {
 		return createElement(
 			'p',
@@ -32,10 +34,12 @@ export default function SettingsTabs( { schema, values, onChange }: SettingsTabs
 			{ className: 'by40q-global-settings__fields' },
 			...schema[ 0 ].fields.map( ( field ) =>
 				createElement( FieldRenderer, {
-					key:      field.key,
+					key:               field.key,
 					field,
-					value:    values[ field.key ] ?? field.default,
-					onChange: ( value ) => onChange( field.key, value ),
+					value:             values[ field.key ] ?? field.default,
+					onChange:          ( value ) => onChange( field.key, value ),
+					shortcodeSettings,
+					onShortcodeChange,
 				} )
 			)
 		);
@@ -61,10 +65,12 @@ export default function SettingsTabs( { schema, values, onChange }: SettingsTabs
 					{ className: 'by40q-global-settings__fields' },
 					...tabData.fields.map( ( field ) =>
 						createElement( FieldRenderer, {
-							key:      field.key,
+							key:               field.key,
 							field,
-							value:    values[ field.key ] ?? field.default,
-							onChange: ( value ) => onChange( field.key, value ),
+							value:             values[ field.key ] ?? field.default,
+							onChange:          ( value ) => onChange( field.key, value ),
+							shortcodeSettings,
+							onShortcodeChange,
 						} )
 					)
 				);
