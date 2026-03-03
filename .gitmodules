@@ -5,3 +5,7 @@
 [submodule "plugins/by40q-global-settings"]
 	path = plugins/by40q-global-settings
 	url = git@github.com:40Q/by40q-global-settings.git
+
+[submodule "plugins/chromadb-sync"]
+	path = plugins/chromadb-sync
+	url = git@github.com:40Q/chromadb-sync.git

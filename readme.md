@@ -17,7 +17,7 @@ git clone --recurse-submodules https://github.com/40q/40q-plugin-hub.git
 cd 40q-plugin-hub
 
 # 2. Install all JS dependencies (all plugins via workspaces)
-yarn install
+yarn
 
 # 3. Install all PHP dependencies (all plugins via path repos)
 composer install

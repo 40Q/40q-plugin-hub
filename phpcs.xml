@@ -8,9 +8,12 @@
 	<!-- Exclude generated/vendor files -->
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/build/*</exclude-pattern>
 
 	<!-- Standards -->
-	<rule ref="WordPress"/>
+	<rule ref="WordPress-Extra">
+		<exclude name="WordPress.PHP.YodaConditions.NotYoda"/>
+	</rule>
 
 	<!-- PHP version target -->
 	<config name="testVersion" value="8.2-"/>
@@ -19,7 +22,4 @@
 	available since the versions we support. WordPress core does NOT
 	need to be present on disk; PHPCS uses its own bundled stubs. -->
 	<config name="minimum_supported_wp_version" value="6.4"/>
-
-	<!-- Allow short array syntax -->
-	<rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
 </ruleset>
