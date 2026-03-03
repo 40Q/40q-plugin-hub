@@ -1,6 +1,9 @@
 <?php
 /**
- * AI tab — fields for AI provider configuration.
+ * AI submenu page — fields for AI provider configuration.
+ *
+ * This partial also registers its own submenu page via register_submenu().
+ * The tab is scoped to that page with 'page' => 'ai'.
  *
  * @package By40Q\GlobalSettings
  */
@@ -15,11 +18,22 @@ add_action(
 	'by40q_register_global_settings',
 	function () {
 
-		Field_Registry::register_tab(
+		// Register the sidebar submenu page.
+		Field_Registry::register_submenu(
 			[
 				'key'   => 'ai',
 				'label' => 'AI',
-				'order' => 20,
+				'order' => 15,
+			]
+		);
+
+		// Register a tab scoped to this submenu page.
+		Field_Registry::register_tab(
+			[
+				'key'   => 'ai_general',
+				'label' => 'General',
+				'page'  => 'ai',
+				'order' => 10,
 			]
 		);
 
@@ -28,7 +42,7 @@ add_action(
 				'key'         => 'ai_api_key',
 				'label'       => 'API Key',
 				'type'        => 'text',
-				'tab'         => 'ai',
+				'tab'         => 'ai_general',
 				'default'     => '',
 				'description' => 'AI provider API key (e.g. OpenAI). Stored encrypted in wp_options.',
 			]
@@ -39,7 +53,7 @@ add_action(
 				'key'         => 'ai_context',
 				'label'       => 'Context',
 				'type'        => 'textarea',
-				'tab'         => 'ai',
+				'tab'         => 'ai_general',
 				'default'     => '',
 				'description' => 'Default system prompt or context sent with every AI request.',
 			]
