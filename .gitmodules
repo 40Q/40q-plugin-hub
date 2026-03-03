@@ -1,3 +1,7 @@
 [submodule "plugins/by40q-core"]
 	path = plugins/by40q-core
 	url = git@github.com:40Q/by40-core.git
+
+[submodule "plugins/by40q-global-settings"]
+	path = plugins/by40q-global-settings
+	url = git@github.com:40Q/by40q-global-settings.git
