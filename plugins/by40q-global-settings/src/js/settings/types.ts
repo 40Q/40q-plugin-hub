@@ -34,6 +34,8 @@ export interface FieldDefinition {
 	repeaterType?: string;
 	/** Label for a single repeater item. */
 	subLabel?: string;
+	/** Disable shortcode registration for this field. */
+	disable_shortcode?: boolean;
 }
 
 export interface TabDefinition {

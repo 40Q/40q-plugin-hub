@@ -57,7 +57,7 @@ export default function FieldRenderer( { field, value, onChange, shortcodeSettin
 			{ className: 'by40q-field__description description' },
 			field.description
 		),
-		( [ 'text', 'textarea', 'richtext', 'url' ] as string[] ).includes( field.type ) && createElement( ShortcodeControl, {
+		( [ 'text', 'textarea', 'richtext', 'url' ] as string[] ).includes( field.type ) && ! field.disable_shortcode && createElement( ShortcodeControl, {
 			enabled:     shortcodeSettings[ field.key ]?.enabled ?? false,
 			slug:        shortcodeSettings[ field.key ]?.slug ?? '',
 			defaultSlug: field.key,
