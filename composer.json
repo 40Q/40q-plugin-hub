@@ -18,6 +18,13 @@
       "options": {
         "symlink": true
       }
+    },
+    "by40q-global-settings": {
+      "type": "path",
+      "url": "./plugins/by40q-global-settings",
+      "options": {
+        "symlink": true
+      }
     }
   },
   "config": {
