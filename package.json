@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "description": "40Q Agency – WordPress Plugin Workspace",
   "private": true,
-  "workspaces": [
-    "plugins/by40q-core",
-    "plugins/by40q-global-settings"
-  ],
   "scripts": {
     "env:start": "wp-env start",
     "env:stop": "wp-env stop",
