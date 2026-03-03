@@ -76,6 +76,10 @@ class Rest_Controller {
 			if ( ! in_array( $field['type'], array( 'text', 'textarea', 'richtext', 'url' ), true ) ) {
 				continue;
 			}
+			// Skip fields that have shortcodes disabled.
+			if ( $field['disable_shortcode'] ?? false ) {
+				continue;
+			}
 			$shortcodes[ $key ] = array(
 				'enabled' => (bool) ( $stored_shortcodes[ $key ]['enabled'] ?? false ),
 				'slug'    => (string) ( $stored_shortcodes[ $key ]['slug'] ?? '' ),

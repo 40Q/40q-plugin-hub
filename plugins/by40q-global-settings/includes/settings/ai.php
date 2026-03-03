@@ -39,23 +39,25 @@ add_action(
 
 		Field_Registry::register_field(
 			[
-				'key'         => 'ai_api_key',
-				'label'       => 'API Key',
-				'type'        => 'text',
-				'tab'         => 'ai_general',
-				'default'     => '',
-				'description' => 'AI provider API key (e.g. OpenAI). Stored encrypted in wp_options.',
+				'key'                => 'ai_api_key',
+				'label'              => 'API Key',
+				'type'               => 'text',
+				'tab'                => 'ai_general',
+				'default'            => '',
+				'description'        => 'AI provider API key (e.g. OpenAI). Stored encrypted in wp_options.',
+				'disable_shortcode'  => true,
 			]
 		);
 
 		Field_Registry::register_field(
 			[
-				'key'         => 'ai_context',
-				'label'       => 'Context',
-				'type'        => 'textarea',
-				'tab'         => 'ai_general',
-				'default'     => '',
-				'description' => 'Default system prompt or context sent with every AI request.',
+				'key'                => 'ai_context',
+				'label'              => 'Context',
+				'type'               => 'textarea',
+				'tab'                => 'ai_general',
+				'default'            => '',
+				'description'        => 'Default system prompt or context sent with every AI request.',
+				'disable_shortcode'  => true,
 			]
 		);
 	}

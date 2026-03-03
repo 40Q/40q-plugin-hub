@@ -67,6 +67,10 @@ final class Global_Settings {
 			if ( ! isset( $fields[ $key ] ) || ! in_array( $fields[ $key ]['type'], $shortcode_types, true ) ) {
 				continue;
 			}
+			// Skip if field has shortcodes disabled.
+			if ( $fields[ $key ]['disable_shortcode'] ?? false ) {
+				continue;
+			}
 			$field_type = $fields[ $key ]['type'];
 			$slug       = $setting['slug'];
 			add_shortcode(

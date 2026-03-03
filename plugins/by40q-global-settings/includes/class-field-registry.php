@@ -124,18 +124,20 @@ class Field_Registry {
 			: 'text';
 
 		self::$fields[ $key ] = array(
-			'key'           => $key,
-			'label'         => sanitize_text_field( $field['label'] ?? $key ),
-			'type'          => $type,
-			'tab'           => sanitize_key( $field['tab'] ?? 'general' ),
-			'default'       => $field['default'] ?? null,
-			'description'   => sanitize_text_field( $field['description'] ?? '' ),
-			'choices'       => is_array( $field['choices'] ?? null ) ? $field['choices'] : array(),
+			'key'              => $key,
+			'label'            => sanitize_text_field( $field['label'] ?? $key ),
+			'type'             => $type,
+			'tab'              => sanitize_key( $field['tab'] ?? 'general' ),
+			'default'          => $field['default'] ?? null,
+			'description'      => sanitize_text_field( $field['description'] ?? '' ),
+			'choices'          => is_array( $field['choices'] ?? null ) ? $field['choices'] : array(),
 			// HTML input type hint for text fields (e.g. 'email', 'tel', 'number').
-			'input_type'    => sanitize_key( $field['input_type'] ?? '' ),
+			'input_type'       => sanitize_key( $field['input_type'] ?? '' ),
 			// Repeater-specific.
-			'repeater_type' => $repeater_type,
-			'sub_label'     => sanitize_text_field( $field['sub_label'] ?? '' ),
+			'repeater_type'    => $repeater_type,
+			'sub_label'        => sanitize_text_field( $field['sub_label'] ?? '' ),
+			// Disable shortcode registration for this field.
+			'disable_shortcode' => (bool) ( $field['disable_shortcode'] ?? false ),
 		);
 	}
 
