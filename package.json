@@ -13,6 +13,7 @@
     "env:reset": "wp-env clean all",
     "env:destroy": "wp-env destroy",
     "env:logs": "wp-env logs",
+    "cli": "wp-env run cli --",
     "lint": "composer run lint",
     "lint:fix": "composer run lint:fix"
   },
