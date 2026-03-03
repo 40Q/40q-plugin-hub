@@ -55,29 +55,33 @@ add_action( 'by40q_register_global_settings', function () {
 
 ### `register_field()` parameters
 
-| Parameter     | Type   | Required | Description                                                       |
-|---------------|--------|----------|-------------------------------------------------------------------|
-| `key`         | string | ✅       | Unique slug — this is what you pass to `by40q_global_setting()`  |
-| `label`       | string | ✅       | Human-readable label shown in the admin UI                         |
-| `type`        | string | ✅       | Field type (see table below)                                       |
-| `tab`         | string | ✅       | Key of a registered tab; orphan fields fall under a General tab   |
-| `default`     | mixed  | —        | Default value returned before the editor saves for the first time |
-| `description` | string | —        | Helper text displayed below the field                              |
-| `choices`     | array  | —        | Required for `select` type — array of `['label' => '', 'value' => '']` |
+| Parameter       | Type   | Required | Description                                                       |
+|-----------------|--------|----------|-------------------------------------------------------------------|
+| `key`           | string | ✅       | Unique slug — this is what you pass to `by40q_global_setting()`  |
+| `label`         | string | ✅       | Human-readable label shown in the admin UI                         |
+| `type`          | string | ✅       | Field type (see table below)                                       |
+| `tab`           | string | ✅       | Key of a registered tab; orphan fields fall under a General tab   |
+| `default`       | mixed  | —        | Default value returned before the editor saves for the first time |
+| `description`   | string | —        | Helper text displayed below the field                              |
+| `choices`       | array  | —        | Required for `select` type — array of `['label' => '', 'value' => '']` |
+| `input_type`    | string | —        | HTML input type hint for `text` fields (e.g. `'email'`, `'tel'`, `'number'`) |
+| `repeater_type` | string | —        | For `repeater` fields: the sub-field type (e.g. `'text'`, `'url'`). Default `'text'` |
+| `sub_label`     | string | —        | For `repeater` fields: label for each item (e.g. `'Link'`). Defaults to field `label` |
 
 ---
 
 ## Field types
 
-| Type       | Stored as     | Notes                                                                 |
-|------------|---------------|-----------------------------------------------------------------------|
-| `text`     | string        | Single-line text input                                                |
-| `textarea` | string        | Multi-line plain text                                                 |
-| `richtext` | string (HTML) | HTML textarea with live preview; see upgrade note below               |
-| `toggle`   | bool          | On/off switch                                                         |
-| `image`    | int           | WordPress attachment ID; use `wp_get_attachment_image_url()` in PHP   |
-| `url`      | string        | URL input with `https://` placeholder; stored via `esc_url_raw()`    |
-| `select`   | string        | Dropdown; requires `choices` array                                    |
+| Type       | Stored as       | Notes                                                                 |
+|------------|-----------------|-----------------------------------------------------------------------|
+| `text`     | string          | Single-line text input; supports `input_type` for email/tel/number hints |
+| `textarea` | string          | Multi-line plain text                                                 |
+| `richtext` | string (HTML)   | HTML textarea with live preview; see upgrade note below               |
+| `toggle`   | bool            | On/off switch                                                         |
+| `image`    | int             | WordPress attachment ID; use `wp_get_attachment_image_url()` in PHP   |
+| `url`      | string          | URL input with `https://` placeholder; stored via `esc_url_raw()`    |
+| `select`   | string          | Dropdown; requires `choices` array                                    |
+| `repeater` | array           | List of items, all of the same sub-type; requires `repeater_type`    |
 
 ### `select` example
 
@@ -94,6 +98,62 @@ add_action( 'by40q_register_global_settings', function () {
         [ 'label' => 'Mega',      'value' => 'mega'      ],
     ],
 ] );
+```
+
+### `text` with `input_type` example
+
+```php
+\By40Q\GlobalSettings\Field_Registry::register_field( [
+    'key'        => 'contact_email',
+    'label'      => 'Contact Email',
+    'type'       => 'text',
+    'input_type' => 'email',  // Triggers browser email validation and mobile keyboard
+    'tab'        => 'contact',
+] );
+
+\By40Q\GlobalSettings\Field_Registry::register_field( [
+    'key'        => 'phone_number',
+    'label'      => 'Phone Number',
+    'type'       => 'text',
+    'input_type' => 'tel',    // Mobile phone keyboard
+    'tab'        => 'contact',
+] );
+```
+
+Supported `input_type` values: `'email'`, `'tel'`, `'number'`, `'url'`, `'date'`, etc. — any valid HTML5 input type.
+
+### `repeater` example
+
+```php
+\By40Q\GlobalSettings\Field_Registry::register_field( [
+    'key'           => 'team_members',
+    'label'         => 'Team Members',
+    'type'          => 'repeater',
+    'repeater_type' => 'text',
+    'sub_label'     => 'Name',
+    'tab'           => 'team',
+    'default'       => [],
+] );
+
+\By40Q\GlobalSettings\Field_Registry::register_field( [
+    'key'           => 'social_links',
+    'label'         => 'Social Media Links',
+    'type'          => 'repeater',
+    'repeater_type' => 'url',
+    'sub_label'     => 'URL',
+    'tab'           => 'contact',
+    'default'       => [],
+] );
+```
+
+In PHP:
+```php
+$links = by40q_global_setting( 'social_links' );  // Returns array of URLs
+foreach ( $links as $url ) {
+    if ( ! empty( $url ) ) {
+        echo '<a href="' . esc_url( $url ) . '">Visit</a>';
+    }
+}
 ```
 
 ### `image` example
@@ -113,6 +173,61 @@ $attachment_id = by40q_global_setting( 'og_default_image' );
 $image_url = $attachment_id
     ? wp_get_attachment_image_url( (int) $attachment_id, 'full' )
     : '';
+```
+
+---
+
+## Shortcodes
+
+Text fields can be exposed as WordPress shortcodes. Editors enable shortcodes and choose the slug for each field directly in the admin UI — devs don't hard-code them.
+
+### How it works
+
+1. Editor visits **Global Settings** → a text field
+2. Below the input, they see a toggle: **"Enable shortcode"**
+3. When toggled on, an editable slug field appears, pre-filled with the field key (e.g. `contact_email`)
+4. Editor can change the slug to anything (e.g. `my_contact_email`)
+5. On save, the shortcode is registered and ready to use in posts
+6. In any post/page, `[my_contact_email]` outputs the saved value
+
+### REST API for shortcodes
+
+Shortcode settings are returned by the GET endpoint and accepted by the POST endpoint:
+
+**GET response** (`/wp-json/by40q/v1/global-settings`):
+```json
+{
+  "schema": [...],
+  "shortcodes": {
+    "contact_email": { "enabled": true,  "slug": "my_contact_email" },
+    "site_slogan":   { "enabled": false, "slug": "" },
+    ...
+  }
+}
+```
+
+**POST body** to save shortcode settings:
+```json
+{
+  "values": { "contact_email": "hello@example.com", ... },
+  "shortcodes": {
+    "contact_email": { "enabled": true, "slug": "company_email" },
+    "site_slogan":   { "enabled": false, "slug": "" }
+  }
+}
+```
+
+### Data storage
+
+Shortcode settings are stored in a separate option for safety:
+
+```
+wp_options.option_name = 'by40q_shortcode_settings'
+```
+
+Inspect via WP CLI:
+```bash
+wp option get by40q_shortcode_settings --format=json
 ```
 
 ---
@@ -250,31 +365,58 @@ add_action( 'by40q_register_global_settings', function () {
 
 ## Data storage
 
-All values are stored in a single WordPress option:
+All field values are stored in a single WordPress option:
 
 ```
 wp_options.option_name = 'by40q_global_settings'
 wp_options.option_value = { "site_slogan": "...", "contact_email": "...", ... }
 ```
 
+Shortcode settings are stored separately:
+
+```
+wp_options.option_name = 'by40q_shortcode_settings'
+wp_options.option_value = { "site_slogan": { "enabled": false, "slug": "" }, ... }
+```
+
 Inspect via WP CLI:
 ```bash
 wp option get by40q_global_settings --format=json
+wp option get by40q_shortcode_settings --format=json
 ```
 
 Reset all values:
 ```bash
 wp option delete by40q_global_settings
+wp option delete by40q_shortcode_settings
 ```
 
 ---
 
 ## REST API reference
 
-| Method | Endpoint                          | Auth             | Description                     |
-|--------|-----------------------------------|------------------|---------------------------------|
-| GET    | `/wp-json/by40q/v1/global-settings` | `manage_options` | Returns schema + current values |
-| POST   | `/wp-json/by40q/v1/global-settings` | `manage_options` | Saves values                    |
+| Method | Endpoint                            | Auth             | Description                             |
+|--------|-------------------------------------|------------------|-----------------------------------------|
+| GET    | `/wp-json/by40q/v1/global-settings` | `manage_options` | Returns schema + values + shortcodes    |
+| POST   | `/wp-json/by40q/v1/global-settings` | `manage_options` | Saves field values and shortcode toggles |
+
+GET response:
+```json
+{
+  "schema": [
+    {
+      "key": "general",
+      "label": "General",
+      "fields": [
+        { "key": "site_slogan", "label": "Site Slogan", "type": "text", "value": "..." }
+      ]
+    }
+  ],
+  "shortcodes": {
+    "site_slogan": { "enabled": true, "slug": "site_slogan" }
+  }
+}
+```
 
 POST body:
 ```json
@@ -282,9 +424,14 @@ POST body:
   "values": {
     "site_slogan": "Building better.",
     "maintenance_mode": false
+  },
+  "shortcodes": {
+    "site_slogan": { "enabled": true, "slug": "site_slogan" }
   }
 }
 ```
+
+> `shortcodes` is optional in the POST body; omit it to save only field values without changing shortcode settings.
 
 ---
 
@@ -293,6 +440,13 @@ POST body:
 ### RichText upgrade path
 
 The `richtext` field currently uses a plain HTML textarea. To upgrade to the full block-editor `RichText` component, wrap the app in `<BlockEditorProvider>` inside [src/js/settings/index.tsx](src/js/settings/index.tsx) and replace `RichtextField.tsx` with a `<RichText>` component from `@wordpress/block-editor`.
+
+### Repeater field notes
+
+- Sub-fields are any type *except* `repeater` (no nesting).
+- Repeater values are stored as a flat array in `wp_options`; each item is sanitized according to the `repeater_type`.
+- Editors can add/remove items in the admin; the UI renders one sub-field per item.
+- Default is `[]` (empty array) unless overridden.
 
 ### Field key collisions
 
@@ -306,7 +460,7 @@ Field keys are global — if two plugins register a field with the same key, the
 ### Adding a new field type
 
 1. Add the type string to `$valid_types` in [includes/class-field-registry.php](includes/class-field-registry.php).
-2. Add a sanitizer branch in `sanitize_value()` in the same file.
+2. Add a sanitizer branch in `sanitize_value()` in the same file. For repeater-like types, handle the `$repeater_type` parameter.
 3. Add the TypeScript type to the `FieldType` union in [src/js/settings/types.ts](src/js/settings/types.ts).
 4. Create a new component in [src/js/settings/components/fields/](src/js/settings/components/fields/).
 5. Add a `case` in [src/js/settings/components/fields/FieldRenderer.tsx](src/js/settings/components/fields/FieldRenderer.tsx).

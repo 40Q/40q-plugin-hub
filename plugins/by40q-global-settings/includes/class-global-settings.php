@@ -49,6 +49,35 @@ final class Global_Settings {
 		 *   } );
 		 */
 		do_action( 'by40q_register_global_settings' );
+		$this->register_shortcodes();
+	}
+
+	/**
+	 * Register WP shortcodes for text, textarea, richtext, and url fields that have a shortcode slug enabled.
+	 * Richtext fields are output via wp_kses_post(); all others via esc_html().
+	 */
+	private function register_shortcodes(): void {
+		$shortcode_settings = Field_Registry::get_shortcode_settings();
+		$fields             = Field_Registry::get_fields();
+		foreach ( $shortcode_settings as $key => $setting ) {
+			if ( empty( $setting['enabled'] ) || empty( $setting['slug'] ) ) {
+				continue;
+			}
+			$shortcode_types = array( 'text', 'textarea', 'richtext', 'url' );
+			if ( ! isset( $fields[ $key ] ) || ! in_array( $fields[ $key ]['type'], $shortcode_types, true ) ) {
+				continue;
+			}
+			$field_type = $fields[ $key ]['type'];
+			$slug       = $setting['slug'];
+			add_shortcode(
+				$slug,
+				static function () use ( $key, $field_type ): string {
+					$values = Field_Registry::get_saved_values();
+					$value  = (string) ( $values[ $key ] ?? '' );
+					return 'richtext' === $field_type ? wp_kses_post( $value ) : esc_html( $value );
+				}
+			);
+		}
 	}
 
 	/**

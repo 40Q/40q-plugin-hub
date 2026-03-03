@@ -35,10 +35,47 @@ class Field_Registry {
 	/** @var array<string, array<string, mixed>> Fields keyed by field key. */
 	private static array $fields = array();
 
+	/** @var array<string, array<string, mixed>> Submenus keyed by submenu key. */
+	private static array $submenus = array();
+
+	/**
+	 * Register a submenu page under Global Settings in the WP admin sidebar.
+	 *
+	 * @param array{key: string, label: string, order?: int} $submenu Submenu definition.
+	 *   Required: key (string), label (string).
+	 *   Optional: order (int, default 10).
+	 */
+	public static function register_submenu( array $submenu ): void {
+		$key = sanitize_key( $submenu['key'] ?? '' );
+		if ( empty( $key ) ) {
+			_doing_it_wrong( __METHOD__, 'Submenu must have a non-empty "key".', '1.0.0' );
+			return;
+		}
+
+		self::$submenus[ $key ] = array(
+			'key'   => $key,
+			'label' => sanitize_text_field( $submenu['label'] ?? $key ),
+			'order' => (int) ( $submenu['order'] ?? 10 ),
+		);
+	}
+
+	/**
+	 * Return registered submenus sorted by order.
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	public static function get_submenus(): array {
+		$submenus = self::$submenus;
+		uasort( $submenus, fn( $a, $b ) => $a['order'] <=> $b['order'] );
+		return $submenus;
+	}
+
 	/**
 	 * Register a tab.
 	 *
-	 * @param array{key: string, label: string, order?: int} $tab Tab definition.
+	 * @param array{key: string, label: string, order?: int, page?: string} $tab Tab definition.
+	 *   Optional: page (string) — key of the submenu page this tab belongs to.
+	 *   Defaults to 'main' (the primary Global Settings page).
 	 */
 	public static function register_tab( array $tab ): void {
 		$key = sanitize_key( $tab['key'] ?? '' );
@@ -51,6 +88,7 @@ class Field_Registry {
 			'key'   => $key,
 			'label' => sanitize_text_field( $tab['label'] ?? $key ),
 			'order' => (int) ( $tab['order'] ?? 10 ),
+			'page'  => sanitize_key( $tab['page'] ?? 'main' ),
 		);
 	}
 
@@ -68,7 +106,7 @@ class Field_Registry {
 			return;
 		}
 
-		$valid_types = array( 'text', 'textarea', 'richtext', 'toggle', 'image', 'url', 'select' );
+		$valid_types = array( 'text', 'textarea', 'richtext', 'toggle', 'image', 'url', 'select', 'repeater' );
 		$type        = $field['type'] ?? 'text';
 		if ( ! in_array( $type, $valid_types, true ) ) {
 			_doing_it_wrong(
@@ -79,27 +117,40 @@ class Field_Registry {
 			return;
 		}
 
+		// Repeater sub-field type — any non-repeater type, defaults to 'text'.
+		$repeater_sub_types = array( 'text', 'textarea', 'richtext', 'toggle', 'image', 'url', 'select' );
+		$repeater_type      = in_array( $field['repeater_type'] ?? 'text', $repeater_sub_types, true )
+			? ( $field['repeater_type'] ?? 'text' )
+			: 'text';
+
 		self::$fields[ $key ] = array(
-			'key'         => $key,
-			'label'       => sanitize_text_field( $field['label'] ?? $key ),
-			'type'        => $type,
-			'tab'         => sanitize_key( $field['tab'] ?? 'general' ),
-			'default'     => $field['default'] ?? null,
-			'description' => sanitize_text_field( $field['description'] ?? '' ),
-			'choices'     => is_array( $field['choices'] ?? null ) ? $field['choices'] : array(),
+			'key'           => $key,
+			'label'         => sanitize_text_field( $field['label'] ?? $key ),
+			'type'          => $type,
+			'tab'           => sanitize_key( $field['tab'] ?? 'general' ),
+			'default'       => $field['default'] ?? null,
+			'description'   => sanitize_text_field( $field['description'] ?? '' ),
+			'choices'       => is_array( $field['choices'] ?? null ) ? $field['choices'] : array(),
+			// HTML input type hint for text fields (e.g. 'email', 'tel', 'number').
+			'input_type'    => sanitize_key( $field['input_type'] ?? '' ),
+			// Repeater-specific.
+			'repeater_type' => $repeater_type,
+			'sub_label'     => sanitize_text_field( $field['sub_label'] ?? '' ),
 		);
 	}
 
 	/**
-	 * Return the full schema: tabs (sorted) each containing their fields, with saved values merged in.
+	 * Return the schema for a given page: tabs (sorted) each containing their fields,
+	 * with saved values merged in.
 	 *
+	 * @param string $page Page context key. Defaults to 'main' (the primary page).
 	 * @return array<string, mixed>
 	 */
-	public static function get_schema(): array {
+	public static function get_schema( string $page = 'main' ): array {
 		$saved_values = self::get_saved_values();
 
-		// Sort tabs by order.
-		$tabs = self::$tabs;
+		// Sort tabs by order, filtered to the requested page.
+		$tabs = array_filter( self::$tabs, fn( $t ) => ( $t['page'] ?? 'main' ) === $page );
 		uasort( $tabs, fn( $a, $b ) => $a['order'] <=> $b['order'] );
 
 		$schema = array();
@@ -169,15 +220,45 @@ class Field_Registry {
 	 * @return array<string, mixed> Sanitized and saved values.
 	 */
 	public static function save_values( array $values ): array {
-		$sanitized = array();
+		// Start from existing saved values so saving one page doesn't wipe another page's fields.
+		$sanitized = self::get_saved_values();
 		foreach ( self::$fields as $field_key => $field ) {
 			if ( ! array_key_exists( $field_key, $values ) ) {
 				continue;
 			}
-			$sanitized[ $field_key ] = self::sanitize_value( $values[ $field_key ], $field['type'] );
+			$sanitized[ $field_key ] = self::sanitize_value( $values[ $field_key ], $field['type'], $field['repeater_type'] );
 		}
 		update_option( 'by40q_global_settings', $sanitized );
 		return $sanitized;
+	}
+
+	/**
+	 * Get stored shortcode settings (which text fields have shortcodes enabled and their slugs).
+	 *
+	 * @return array<string, array{enabled: bool, slug: string}>
+	 */
+	public static function get_shortcode_settings(): array {
+		$option = get_option( 'by40q_shortcode_settings', array() );
+		return is_array( $option ) ? $option : array();
+	}
+
+	/**
+	 * Persist shortcode settings (enabled/slug per text field key).
+	 *
+	 * @param array<string, mixed> $settings Raw settings from REST request.
+	 */
+	public static function save_shortcode_settings( array $settings ): void {
+		$sanitized = array();
+		foreach ( $settings as $key => $setting ) {
+			if ( ! is_array( $setting ) ) {
+				continue;
+			}
+			$sanitized[ sanitize_key( $key ) ] = array(
+				'enabled' => (bool) ( $setting['enabled'] ?? false ),
+				'slug'    => sanitize_key( $setting['slug'] ?? '' ),
+			);
+		}
+		update_option( 'by40q_shortcode_settings', $sanitized );
 	}
 
 	/**
@@ -187,7 +268,7 @@ class Field_Registry {
 	 * @param string $type  Field type.
 	 * @return mixed Sanitized value.
 	 */
-	private static function sanitize_value( mixed $value, string $type ): mixed {
+	private static function sanitize_value( mixed $value, string $type, string $repeater_type = 'text' ): mixed {
 		return match ( $type ) {
 			'text'      => sanitize_text_field( (string) $value ),
 			'textarea'  => sanitize_textarea_field( (string) $value ),
@@ -196,6 +277,9 @@ class Field_Registry {
 			'image'     => (int) $value, // attachment ID.
 			'url'       => esc_url_raw( (string) $value ),
 			'select'    => sanitize_text_field( (string) $value ),
+			'repeater'  => is_array( $value )
+				? array_values( array_map( fn( $item ) => self::sanitize_value( $item, $repeater_type ), $value ) )
+				: array(),
 			default     => sanitize_text_field( (string) $value ),
 		};
 	}

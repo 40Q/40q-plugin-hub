@@ -16,4 +16,5 @@ defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/settings/contact.php';
 require_once __DIR__ . '/settings/ai.php';
+require_once __DIR__ . '/settings/seo.php';
 require_once __DIR__ . '/settings/sample.php';

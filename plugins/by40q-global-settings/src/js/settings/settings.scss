@@ -99,7 +99,7 @@
 	&__fields {
 		display: flex;
 		flex-direction: column;
-		gap: 28px;
+		gap: 42px;
 		max-width: 640px;
 	}
 }
@@ -169,5 +169,100 @@
 				line-height: 1.6;
 			}
 		}
+	}
+}
+
+// ── Shortcode control (per-field toggle + editable slug) ─────────────────────
+
+.by40q-shortcode-control {
+	margin-top: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+
+	// Tighten the toggle bottom margin.
+	.components-toggle-control {
+		margin-bottom: 0;
+	}
+
+	&__slug-row {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	&__bracket {
+		font-family: monospace;
+		font-size: 14px;
+		font-weight: 600;
+		color: #3c434a;
+		line-height: 1;
+		user-select: none;
+	}
+
+	// Shrink the TextControl to fit inline.
+	.components-text-control__input {
+		padding-top: 6px;
+		padding-bottom: 6px;
+		font-family: monospace;
+		font-size: 13px;
+		max-width: 220px;
+	}
+
+	&__copy.components-button {
+		font-size: 12px;
+		min-height: unset;
+		padding: 0;
+		height: auto;
+		line-height: 1;
+		margin-left: 4px;
+	}
+}
+
+// ── Repeater field ───────────────────────────────────────────────────────────
+
+.by40q-repeater {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	&__label {
+		display: block;
+		font-size: 11px;
+		font-weight: 500;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		color: #1d2327;
+		margin-bottom: 4px;
+	}
+
+	&__item {
+		position: relative;
+		padding: 14px 16px;
+		background: #fff;
+		border: 1px solid #c3c4c7;
+		border-radius: 2px;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+
+		.components-base-control__label {
+			font-size: 12px;
+			color: #646970;
+		}
+	}
+
+	&__remove.components-button {
+		align-self: flex-start;
+		font-size: 12px;
+		min-height: unset;
+		padding: 0;
+		height: auto;
+		line-height: 1;
+	}
+
+	&__add.components-button {
+		align-self: flex-start;
+		margin-top: 2px;
 	}
 }
