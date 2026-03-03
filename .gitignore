@@ -1,5 +1,6 @@
 vendor/
 node_modules/
+uploads/
 
 # Numerous always-ignore extensions
 *.diff
