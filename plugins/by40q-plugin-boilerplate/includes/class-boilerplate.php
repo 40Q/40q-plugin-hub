@@ -29,6 +29,28 @@ final class Boilerplate {
 	}
 
 	public function init(): void {
-		// Initialization code here
+		add_action( 'enqueue_editor_scripts', array( $this, 'enqueue_editor_scripts' ) );
+	}
+
+	/**
+	 * Enqueue the React settings bundle on any Global Settings admin page.
+	 *
+	 */
+	public function enqueue_editor_scripts(): void {
+		$asset_file = BY40Q_BOILERPLATE_PATH . 'build/scripts/index.asset.php';
+
+		if ( ! file_exists( $asset_file ) ) {
+			return;
+		}
+
+		$asset = require $asset_file;
+
+		wp_enqueue_script(
+			'by40q-global-settings',
+			BY40Q_BOILERPLATE_URL . 'build/scripts/index.js',
+			$asset['dependencies'],
+			$asset['version'],
+			true
+		);
 	}
 }
