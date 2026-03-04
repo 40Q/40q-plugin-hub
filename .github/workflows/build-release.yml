@@ -1,0 +1,55 @@
+name: Build and Release Plugins
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        plugin:
+          - by40q-core
+          - by40q-global-settings
+          - chromadb-sync
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+
+      - name: Install dependencies
+        run: |
+          cd plugins/${{ matrix.plugin }}
+          yarn install
+          composer install --no-dev
+
+      - name: Build plugin
+        run: |
+          cd plugins/${{ matrix.plugin }}
+          yarn build
+
+      - name: Create plugin zip
+        run: |
+          cd plugins/${{ matrix.plugin }}
+          yarn build:zip
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v1
+        with:
+          files: plugins/${{ matrix.plugin }}/build/${{ matrix.plugin }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
