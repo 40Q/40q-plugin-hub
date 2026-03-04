@@ -38,7 +38,7 @@ Admin: http://localhost:8888/wp-admin (admin / password)
 
 Try our plugins instantly in WordPress Playground without setting up Docker:
 
-[![Open in WordPress Playground](https://img.shields.io/badge/Open%20in-WordPress%20Playground-blue)](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/40Q/by40q-global-settings/master/blueprint.json)
+[![Open in WordPress Playground](https://img.shields.io/badge/Open%20in-WordPress%20Playground-blue)](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/40Q/40q-plugin-hub/master/blueprint.json)
 
 ## Adding a New Plugin
 
