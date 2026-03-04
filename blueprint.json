@@ -12,6 +12,13 @@
       "step": "installPlugin",
       "pluginData": {
         "resource": "url",
+        "url": "https://github.com/40Q/by40q-core/releases/latest/download/by40q-core.zip"
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "url",
         "url": "https://github.com/40Q/by40q-global-settings/releases/latest/download/by40q-global-settings.zip"
       }
     }
