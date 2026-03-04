@@ -5,8 +5,8 @@ Development workspace for 40Q Agency WordPress plugins. **This repo is for devel
 ## Requirements
 
 - Node.js >= 20
-- yarn >= 4
-- Composer >= 2
+- yarn
+- Composer
 - Docker Desktop
 
 ## Quick Start
