@@ -5,6 +5,7 @@
   "plugins": ["./plugins/by40q-core", "./plugins/by40q-global-settings", "./plugins/chromadb-sync"],
   "themes": [],
   "port": 8988,
+  "testsEnvironment": false,
   "mappings": {
     "wp-content/uploads": "./uploads"
   },
