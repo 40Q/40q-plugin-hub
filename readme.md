@@ -5,11 +5,13 @@ Development workspace for 40Q Agency WordPress plugins. **This repo is for devel
 ## Requirements
 
 - Node.js >= 20
-- yarn >= 4
-- Composer >= 2
+- yarn
+- Composer
 - Docker Desktop
 
 ## Quick Start
+
+### Option 1: Local Development with Docker
 
 ```bash
 # 1. Clone with submodules
@@ -31,6 +33,12 @@ yarn build:watch
 
 WordPress runs at: http://localhost:8888
 Admin: http://localhost:8888/wp-admin (admin / password)
+
+### Option 2: Online with WordPress Playground
+
+Try our plugins instantly in WordPress Playground without setting up Docker:
+
+[![Open in WordPress Playground](https://img.shields.io/badge/Open%20in-WordPress%20Playground-blue)](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/40Q/40q-plugin-hub/master/blueprint.json)
 
 ## Adding a New Plugin
 

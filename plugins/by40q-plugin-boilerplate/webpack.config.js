@@ -4,7 +4,7 @@ const path = require("path");
 module.exports = {
   ...defaultConfig,
   entry: {
-    settings: path.resolve(process.cwd(), "src", "js", "index.tsx"),
+    index: path.resolve(process.cwd(), "src", "js", "index.tsx"),
   },
   output: {
     ...defaultConfig.output,
