@@ -7,3 +7,18 @@
 [submodule "plugins/by40q-global-settings"]
 	path = plugins/by40q-global-settings
 	url = git@github.com:40Q/by40q-global-settings.git
+[submodule "plugins/by40q-autonomy-ai-hub"]
+	path = plugins/by40q-autonomy-ai-hub
+	url = git@github.com:40Q/by40q-autonomy-ai-hub.git
+[submodule "plugins/by40q-seo-assistant"]
+	path = plugins/by40q-seo-assistant
+	url = git@github.com:40Q/by40q-seo-assistant.git
+[submodule "plugins/by40q-content-assistant"]
+	path = plugins/by40q-content-assistant
+	url = git@github.com:40Q/by40q-content-assistant.git
+[submodule "plugins/by40q-image-generator"]
+	path = plugins/by40q-image-generator
+	url = git@github.com:40Q/by40q-image-generator.git
+[submodule "plugins/by40q-media-alt-suggester"]
+	path = plugins/by40q-media-alt-suggester
+	url = git@github.com:40Q/by40q-media-alt-suggester.git

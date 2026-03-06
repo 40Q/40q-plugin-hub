@@ -2,7 +2,16 @@
   "$schema": "https://schemas.wp.org/trunk/wp-env.json",
   "core": "WordPress/WordPress",
   "phpVersion": "8.2",
-  "plugins": ["./plugins/by40q-core", "./plugins/by40q-global-settings", "./plugins/chromadb-sync"],
+  "plugins": [
+    "./plugins/by40q-core",
+    "./plugins/by40q-global-settings",
+    "./plugins/by40q-autonomy-ai-hub",
+    "./plugins/by40q-seo-assistant",
+    "./plugins/by40q-content-assistant",
+    "./plugins/by40q-image-generator",
+    "./plugins/by40q-media-alt-suggester",
+    "./plugins/chromadb-sync"
+  ],
   "themes": [],
   "port": 8988,
   "mappings": {
