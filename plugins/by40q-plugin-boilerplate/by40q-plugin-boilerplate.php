@@ -29,7 +29,7 @@ define( 'BY40Q_BOILERPLATE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'BY40Q_BOILERPLATE_URL', plugin_dir_url( __FILE__ ) );
 
 // Check if 40Q Core Plugin is active.
-if ( ! defined( 'BY40Q_CORE_VERSION' ) ) {
+if ( ! defined( 'BY40Q_AUTONOMY_AI_HUB_VERSION' ) ) {
 	add_action(
 		'admin_notices',
 		function () {
