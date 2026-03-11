@@ -3,7 +3,6 @@
   "core": "WordPress/WordPress",
   "phpVersion": "8.2",
   "plugins": [
-    "./plugins/by40q-core",
     "./plugins/by40q-global-settings",
     "./plugins/by40q-autonomy-ai-hub",
     "./plugins/by40q-seo-assistant",
