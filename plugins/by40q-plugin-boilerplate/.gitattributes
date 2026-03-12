@@ -1,0 +1,14 @@
+# Exclude from zipball/archive downloads
+/.github export-ignore
+/.gitignore export-ignore
+/.gitattributes export-ignore
+/.git export-ignore
+/composer.json export-ignore
+/composer.lock export-ignore
+/package.json export-ignore
+/package-lock.json export-ignore
+/yarn.lock export-ignore
+/webpack.* export-ignore
+/tsconfig.json export-ignore
+/src export-ignore
+No newline at end of file
