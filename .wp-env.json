@@ -9,7 +9,8 @@
     "./plugins/by40q-content-assistant",
     "./plugins/by40q-image-generator",
     "./plugins/by40q-media-alt-suggester",
-    "./plugins/chromadb-sync"
+    "./plugins/chromadb-sync",
+    "./plugins/dashboard-organizer"
   ],
   "themes": [],
   "port": 8988,

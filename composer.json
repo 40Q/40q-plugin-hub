@@ -11,22 +11,6 @@
     "wp-coding-standards/wpcs": "^3.0",
     "phpcsstandards/phpcsextra": "^1.2"
   },
-  "repositories": {
-    "by40q-core": {
-      "type": "path",
-      "url": "./plugins/by40q-core",
-      "options": {
-        "symlink": true
-      }
-    },
-    "by40q-global-settings": {
-      "type": "path",
-      "url": "./plugins/by40q-global-settings",
-      "options": {
-        "symlink": true
-      }
-    }
-  },
   "config": {
     "allow-plugins": {
       "composer/installers": true,

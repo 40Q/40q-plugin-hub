@@ -19,3 +19,7 @@
 [submodule "plugins/by40q-media-alt-suggester"]
 	path = plugins/by40q-media-alt-suggester
 	url = git@github.com:40Q/by40q-media-alt-suggester.git
+[submodule "plugins/dashboard-organizer"]
+	path = plugins/dashboard-organizer
+	url = git@github.com:40Q/dashboard-organizer.git
+
